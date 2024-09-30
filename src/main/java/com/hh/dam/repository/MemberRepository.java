@@ -1,4 +1,7 @@
 package com.hh.dam.repository;
 
-public class MemberRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MemberRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
 }
