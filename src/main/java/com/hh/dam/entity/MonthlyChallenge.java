@@ -1,26 +1,33 @@
 package com.hh.dam.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
-
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 
 @Data
 @Entity
 public class MonthlyChallenge {
     @Id
-    private String monthly_id;
-    private String member_id;
-    private Date start_date;
-    private Date end_date;
-    private int total_days;
-    private int success_days;
-    private float success_rate;
+    private long monthly_id;
+    private int member_id;
+    private LocalDate start_date;
+    private LocalDate end_date;
 
-    @Enumerated(EnumType.STRING)  // ENUM_TYPE을 STRING으로 설정
-    private ChallengeStatus status;
+    @OneToMany(mappedBy = "monthlyChallenge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DailyChallenge> dailyChallenges; // DailyChallenge와의 관계 설정
 
+    // 기본 생성자 (JPA용)
+    protected MonthlyChallenge() {
+    }
+
+    // 인자를 받는 생성자
+    public MonthlyChallenge(int member_id) {
+        this.member_id = member_id;
+        LocalDate now = LocalDate.now();
+        this.start_date = now.withDayOfMonth(1);
+        YearMonth yearMonth = YearMonth.from(now);
+        this.end_date = yearMonth.atEndOfMonth();
+    }
 }
