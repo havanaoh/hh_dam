@@ -3,19 +3,26 @@ package com.hh.dam.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
 
-    @Column(name = "Username", nullable = false, unique = true)
-    private String username;
+    @Column(name = "UserID", nullable = false, unique = true)
+    private String userId;
 
     @Column(name = "Password", nullable = false)
     private String password;

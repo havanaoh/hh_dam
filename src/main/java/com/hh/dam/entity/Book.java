@@ -16,7 +16,7 @@ public class Book {
     private int book_id;
     private String book_title;
     private String author;
-    private String publicher;
+    private String publisher;
     private int book_cover;
     private String isbn;
     private int total_page;

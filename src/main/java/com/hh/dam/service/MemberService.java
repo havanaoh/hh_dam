@@ -1,26 +1,55 @@
 package com.hh.dam.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hh.dam.dto.SignInRequest;
+import com.hh.dam.dto.SignUpRequest;
+import com.hh.dam.entity.Member;
 import com.hh.dam.repository.MemberRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
-public class MyMemberDetailsService implements MemberDetailsService {
+@Transactional
+public class MemberService {
 
-    private final MemberRepository userRepository;
-
-    public MyUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final MemberRepository memberRepository;
+    
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
-    @Override
-    public MemberDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        
-        UserBuilder builder = withUsername(user.getUsername());
-        builder.password(user.getPassword());
-        builder.roles(user.getRoles().toArray(new String[0]));
-        
-        return builder.build();
+    public boolean checkLoginIdDuplicate(String UserId){
+        return memberRepository.existsByLoginId(UserId);
+    }
+
+
+    public void signup(SignUpRequest signupRequest) {
+        memberRepository.save(signupRequest.toEntity());
+    }
+
+    public Member signin(SignInRequest signinRequest) {
+        Member findMember = memberRepository.findByLoginId(signinRequest.getUserId());
+
+        if(findMember == null){
+            return null;
+        }
+
+        if (!findMember.getPassword().equals(signinRequest.getPassword())) {
+            return null;
+        }
+
+        return findMember;
+    }
+
+    public Member getLoginMemberById(Integer memberId){
+        if(memberId == null) return null;
+
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        return findMember.orElse(null);
+
     }
 }

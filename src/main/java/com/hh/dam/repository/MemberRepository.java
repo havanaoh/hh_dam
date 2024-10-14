@@ -2,6 +2,10 @@ package com.hh.dam.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+import com.hh.dam.entity.Member;
+
+public interface MemberRepository extends JpaRepository<Member, Integer> {
+    boolean existsByLoginId(String UserId);
+    
+    Member findByLoginId(String UserId);
 }
