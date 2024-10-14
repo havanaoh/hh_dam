@@ -3,19 +3,26 @@ package com.hh.dam.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
 
-    @Column(name = "Username", nullable = false, unique = true)
-    private String username;
+    @Column(name = "UserId", nullable = false, unique = true)
+    private String userId;
 
     @Column(name = "Password", nullable = false)
     private String password;
@@ -42,13 +49,13 @@ public class Member {
     private boolean isActive;
 
     @Column(name = "Report_time")
-    private int reportTime;
+    private Timestamp reportTime;
 
     @Column(name = "Report_reason")
     private String reportReason;
 
     @Column(name = "Image_id")
-    private int imageId;
+    private Integer imageId;
 
 }
 

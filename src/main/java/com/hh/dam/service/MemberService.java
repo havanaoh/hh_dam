@@ -1,26 +1,33 @@
 package com.hh.dam.service;
 
-import org.springframework.stereotype.Service;
+import com.hh.dam.entity.Member;
 import com.hh.dam.repository.MemberRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
-public class MyMemberDetailsService implements MemberDetailsService {
+public class MemberService {
 
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MyUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public MemberDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        
-        UserBuilder builder = withUsername(user.getUsername());
-        builder.password(user.getPassword());
-        builder.roles(user.getRoles().toArray(new String[0]));
-        
-        return builder.build();
+    public Member findByUserId(String userId) {
+        return memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));  // 예외 처리
     }
+
+    public void registerMember(Member member) {
+        member.setPassword(passwordEncoder.encode(member.getPassword()));  // 비밀번호 암호화
+        memberRepository.save(member);
+    }
+
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);  // 인코딩된 비밀번호와 비교
+    }
+
 }

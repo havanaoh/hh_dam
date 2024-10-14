@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("/")
-    public String main(){
-        return "index";
+    public String main() {
+        return "index";  // templates/public/index.html로 이동
+    }
+
+    @GetMapping("/challenge")
+    public String challenge() {
+        return "challenge";  // templates/public/index.html로 이동
     }
 }

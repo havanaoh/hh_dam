@@ -1,7 +1,14 @@
 package com.hh.dam.repository;
 
+import com.hh.dam.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUsername(String username);
+import java.util.Optional;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByUserId(String userId);
+
+    int deleteMemberByUserId(String userId);
+
+
 }
