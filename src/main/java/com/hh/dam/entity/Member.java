@@ -21,7 +21,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
 
-    @Column(name = "UserId", nullable = false, unique = true)
+    @Column(name = "UserID", nullable = false, unique = true)
     private String userId;
 
     @Column(name = "Password", nullable = false)
@@ -49,13 +49,13 @@ public class Member {
     private boolean isActive;
 
     @Column(name = "Report_time")
-    private Timestamp reportTime;
+    private int reportTime;
 
     @Column(name = "Report_reason")
     private String reportReason;
 
     @Column(name = "Image_id")
-    private Integer imageId;
+    private int imageId;
 
 }
 
