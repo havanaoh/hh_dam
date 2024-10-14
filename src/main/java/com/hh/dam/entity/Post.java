@@ -3,6 +3,7 @@ package com.hh.dam.entity;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "Post")
@@ -11,8 +12,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postId;
 
-    @Column(name = "boardId", nullable = false)
-    private int boardId;
+    @ManyToOne
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
 
     @Column(name = "MmemberId", nullable = false)
     private int memberId;
@@ -47,7 +49,7 @@ public class Post {
     @Column(name = "plikes", nullable = false, columnDefinition = "int default 0")
     private int plikes;
 
-//    @OneToMany(mappedBy = "post")
-//    private List<Comment> comments;
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
 
 }

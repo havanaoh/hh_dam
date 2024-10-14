@@ -10,10 +10,10 @@ import java.util.List;
 @Entity
 public class MonthlyChallenge {
     @Id
-    private long monthly_id;
-    private int member_id;
-    private LocalDate start_date;
-    private LocalDate end_date;
+    private long monthlyId;
+    private int memberId;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @OneToMany(mappedBy = "monthlyChallenge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DailyChallenge> dailyChallenges; // DailyChallenge와의 관계 설정
@@ -23,11 +23,12 @@ public class MonthlyChallenge {
     }
 
     // 인자를 받는 생성자
-    public MonthlyChallenge(int member_id) {
-        this.member_id = member_id;
+    public MonthlyChallenge(int memberId) {
+        this.memberId = memberId;
         LocalDate now = LocalDate.now();
-        this.start_date = now.withDayOfMonth(1);
+        this.startDate = now.withDayOfMonth(1);
         YearMonth yearMonth = YearMonth.from(now);
-        this.end_date = yearMonth.atEndOfMonth();
+        this.endDate = yearMonth.atEndOfMonth();
     }
+
 }

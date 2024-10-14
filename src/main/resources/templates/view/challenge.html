@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth'
+            });
+            calendar.render();
+        });
+
+    </script>
+    <style>
+        #calendar {
+            width: 50%;  /* 너비를 80%로 설정 */
+            margin: 60px auto 0;  /* 중앙 정렬 */
+            height: 600px;  /* 고정된 높이 설정 */
+        }
+    </style>
+</head>
+<body>
+    <div id='calendar'></div>
+</body>
+</html>

@@ -28,14 +28,14 @@ public class MonthlyChallengeService {
 
         // 각 DailyChallenge의 성공 상태 업데이트
         for (DailyChallenge dailyChallenge : monthlyChallenge.getDailyChallenges()) {
-            dailyChallengeService.updateDailyChallengeStatus(dailyChallenge.getDaily_id());
+            dailyChallengeService.updateDailyChallengeStatus(dailyChallenge.getDailyId());
         }
 
         // 현재 날짜 가져오기
         LocalDate now = LocalDate.now();
 
         // 상태 계산
-        if (now.isBefore(monthlyChallenge.getStart_date()) || now.isAfter(monthlyChallenge.getEnd_date())) {
+        if (now.isBefore(monthlyChallenge.getStartDate()) || now.isAfter(monthlyChallenge.getEndDate())) {
             return "미진행";  // 시작일 이전 또는 종료일 이후에는 미진행 상태
         }
 
@@ -59,4 +59,6 @@ public class MonthlyChallengeService {
             }
         }
     }
+
+
 }

@@ -1,26 +1,31 @@
 package com.hh.dam.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int book_id;
-    private String book_title;
+    private int bookId;
+    private String bookTitle;
     private String author;
-    private String publicher;
-    private int book_cover;
+    private String publisher;
+    private int bookCover;
     private String isbn;
-    private int total_page;
-    private Timestamp book_created;
-    private Timestamp book_modified;
+    private int totalPage;
+    private Timestamp bookCreated;
+    private Timestamp bookModified;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, columnDefinition = "varchar(255) default '안 읽음'")
+    private BookStatus bookStatus;
+
+    @OneToMany(mappedBy = "book")
+    private List<Library> libraries;
 
 }
