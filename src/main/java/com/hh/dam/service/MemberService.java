@@ -1,33 +1,55 @@
 package com.hh.dam.service;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hh.dam.dto.SignInRequest;
+import com.hh.dam.dto.SignUpRequest;
 import com.hh.dam.entity.Member;
 import com.hh.dam.repository.MemberRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    public Member findByUserId(String userId) {
-        return memberRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));  // 예외 처리
+    public boolean checkLoginIdDuplicate(String UserId){
+        return memberRepository.existsByLoginId(UserId);
     }
 
-    public void registerMember(Member member) {
-        member.setPassword(passwordEncoder.encode(member.getPassword()));  // 비밀번호 암호화
-        memberRepository.save(member);
+
+    public void signup(SignUpRequest signupRequest) {
+        memberRepository.save(signupRequest.toEntity());
     }
 
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);  // 인코딩된 비밀번호와 비교
+    public Member signin(SignInRequest signinRequest) {
+        Member findMember = memberRepository.findByLoginId(signinRequest.getUserId());
+
+        if(findMember == null){
+            return null;
+        }
+
+        if (!findMember.getPassword().equals(signinRequest.getPassword())) {
+            return null;
+        }
+
+        return findMember;
     }
 
+    public Member getLoginMemberById(Integer memberId){
+        if(memberId == null) return null;
+
+        Optional<Member> findMember = memberRepository.findById(memberId);
+        return findMember.orElse(null);
+
+    }
 }
