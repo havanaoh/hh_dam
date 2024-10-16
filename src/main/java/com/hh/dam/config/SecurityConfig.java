@@ -19,7 +19,7 @@ public class SecurityConfig {
 				.csrf(withDefaults())
 				.authorizeHttpRequests(authorize -> authorize
 					// 인증 없이 접근 가능(로그인, 회원가입)
-					.requestMatchers("/", "/home","/signin", "/signup").permitAll()
+					.requestMatchers("/", "/home","/security/signin", "/signup").permitAll()
 
 					// ADMIN 권한이 있어야 접근 가능
 					.requestMatchers("/admin").hasRole("ADMIN")
@@ -42,7 +42,7 @@ public class SecurityConfig {
 				.permitAll()
         )
 				.formLogin((auth) -> auth
-						.loginPage("/signin")  // 사용자 정의 로그인 페이지
+						.loginPage("/security/signin")  // 사용자 정의 로그인 페이지
 						.loginProcessingUrl("/security-signin/loginProc")  // 로그인 처리 URL
 						.failureUrl("/signin?error=true")  // 로그인 실패 시 이동할 경로
 						.defaultSuccessUrl("/home", true)  // 로그인 성공 후 이동할 경로
