@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.hh.dam.entity.Member;
 
+import java.util.Optional;
+
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-    boolean existsByLoginId(String UserId);
-    
-    Member findByLoginId(String UserId);
+    boolean existsByUserId(String UserId);
+
+    Optional<Member> findByUserId(String userId);
 }
