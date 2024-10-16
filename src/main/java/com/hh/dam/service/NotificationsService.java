@@ -16,13 +16,14 @@ public class NotificationsService {
         this.notificationsRepository = notificationsRepository;
     }
 
-//    public void createNotification(Member member, String message){
-//        Notifications notifications = new Notifications();
-//        notifications.setMember(member);
-//        notifications.setMessage(message);
-//        notifications.setCreatedAt(LocalDate.now());
-//        notifications.setIs_read(false);
-//
-//        notificationsRepository.save(notifications);
-//    }
+    public void createNotification(Member member, String message){
+        Notifications notifications = new Notifications();
+        notifications.setMember(member);
+        notifications.setMessage(message);
+        notifications.setCreatedAt(LocalDate.now());
+        notifications.setIsRead(false);
+
+        notificationsRepository.save(notifications);
+    }
+
 }

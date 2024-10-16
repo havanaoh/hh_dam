@@ -1,7 +1,6 @@
 package com.hh.dam.controller;
 
 import com.hh.dam.entity.Member;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,11 +32,15 @@ public class MemberController {
     public String registerUser(@ModelAttribute("member") Member member) {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         memberRepository.save(member);
-        return "redirect:/signin";
+        return "redirect:/login";
     }
 
-    @GetMapping("/signin")
+    @GetMapping("/login")
     public String showLoginForm() {
-        return "signin";
+        return "login";
     }
+
+
+
+
 }

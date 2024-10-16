@@ -23,7 +23,7 @@ public class MemberService {
     }
 
     public boolean checkLoginIdDuplicate(String UserId){
-        return memberRepository.existsByLoginId(UserId);
+        return memberRepository.existsByUserId(UserId);
     }
 
 
@@ -32,7 +32,7 @@ public class MemberService {
     }
 
     public Member signin(SignInRequest signinRequest) {
-        Member findMember = memberRepository.findByLoginId(signinRequest.getUserId());
+        Member findMember = memberRepository.findByUserId(signinRequest.getUserId());
 
         if(findMember == null){
             return null;

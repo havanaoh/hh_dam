@@ -12,12 +12,14 @@ public class Notifications {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int notificationId;
 
-//    @ManyToOne
-//    Member member;
-//
-//    private String message;
-//    private LocalDate createdAt;
-//    @Column(columnDefinition = "default false")
-//    private Boolean is_read;
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "memberId") // 명확히 memberId와 매핑
+    private Member member;
+
+    private String message;
+    private LocalDate createdAt;
+
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isRead;
 
 }
