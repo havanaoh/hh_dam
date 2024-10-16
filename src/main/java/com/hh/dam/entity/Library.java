@@ -2,6 +2,8 @@ package com.hh.dam.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Entity
@@ -17,10 +19,14 @@ public class Library {
     @JoinColumn(name = "book_id", nullable = false) // Foreign Key, Book ID
     private Book book;
     private LocalDate startDate;
-    private LocalDate endDate;
+    private Timestamp endDate;
     private int currentPage;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private BookStatus status; // 책 상태 (READING, WISHLIST, COMPLETED, NOT_READ)
+
+
+
+
 }

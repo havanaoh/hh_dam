@@ -18,7 +18,6 @@ public class MonthlyChallenge {
     @OneToMany(mappedBy = "monthlyChallenge", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DailyChallenge> dailyChallenges; // DailyChallenge와의 관계 설정
 
-    // 기본 생성자 (JPA용)
     protected MonthlyChallenge() {
     }
 
