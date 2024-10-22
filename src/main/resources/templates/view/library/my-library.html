@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 서재</title>
+  <link rel="stylesheet" href="/css/styles.css"> <!-- CSS 파일 링크 -->
+</head>
+<body>
+
+<div class="container">
+  <h1>내 서재</h1>
+
+  <nav>
+    <ul>
+      <li><a href="/library/wishlist">찜 목록</a></li>
+      <li><a href="/library/completed">완독 목록</a></li>
+      <li><a href="/library/reading">읽고 있는 책</a></li>
+    </ul>
+  </nav>
+
+  <div th:if="${message}">
+    <p th:text="${message}"></p>
+  </div>
+</div>
+
+</body>
+</html>
