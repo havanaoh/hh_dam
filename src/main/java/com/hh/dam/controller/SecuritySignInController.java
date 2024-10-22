@@ -18,16 +18,15 @@ import java.util.Collection;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/security")
 public class SecuritySignInController {
 
     private final MemberService memberService;
 
-    // 홈 페이지
+    // 홈 페이지(로그인 한 사용자만 보이는 화면)
     @GetMapping("/home")
     public String home(Model model) {
-        model.addAttribute("signInType", "security-signIn");
-        model.addAttribute("pageName", "스프링 시큐리티 로그인");
+        model.addAttribute("signType", "security-signIn");
+        model.addAttribute("pageName", "스프링 시큐리티 홈");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getName())) {
@@ -49,7 +48,7 @@ public class SecuritySignInController {
     // 회원가입 페이지
     @GetMapping("/signup")
     public String signUpPage(Model model) {
-        model.addAttribute("signInType", "security-signIn");
+        model.addAttribute("signType", "security-signUp");
         model.addAttribute("pageName", "스프링 시큐리티 회원가입");
 
         model.addAttribute("signUpRequest", new SignUpRequest());
@@ -59,7 +58,7 @@ public class SecuritySignInController {
     // 회원가입 처리
     @PostMapping("/signup")
     public String signUp(@Valid @ModelAttribute SignUpRequest signUpRequest, BindingResult bindingResult, Model model) {
-        model.addAttribute("signInType", "security-signIn");
+        model.addAttribute("signType", "security-signUp");
         model.addAttribute("pageName", "스프링 시큐리티 회원가입");
 
         if (bindingResult.hasErrors()) {
@@ -74,7 +73,7 @@ public class SecuritySignInController {
     // 로그인 페이지
     @GetMapping("/signin")
     public String signInPage(Model model) {
-        model.addAttribute("signInType", "security-signIn");
+        model.addAttribute("signType", "security-signIn");
         model.addAttribute("pageName", "스프링 시큐리티 로그인");
         model.addAttribute("signInRequest", new SignInRequest());
 
@@ -90,8 +89,8 @@ public class SecuritySignInController {
     // 회원 정보 페이지
     @GetMapping("/info")
     public String memberInfo(Authentication auth, Model model) {
-        model.addAttribute("signInType", "security-signIn");
-        model.addAttribute("pageName", "스프링 시큐리티 로그인");
+        model.addAttribute("signType", "security-signIn");
+        model.addAttribute("pageName", "스프링 시큐리티 회원정보");
 
         Member signInMember = memberService.getLoginMemberById(auth.getName());
         model.addAttribute("member", signInMember);
@@ -101,8 +100,8 @@ public class SecuritySignInController {
     // 관리자 페이지
     @GetMapping("/admin")
     public String adminPage(Model model) {
-        model.addAttribute("signInType", "security-signIn");
-        model.addAttribute("pageName", "스프링 시큐리티 로그인");
+        model.addAttribute("signType", "security-signIn");
+        model.addAttribute("pageName", "스프링 시큐리티 관리자");
 
         return "admin";
     }

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,10 +17,10 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		http
-				.csrf(withDefaults())
+				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(authorize -> authorize
 					// 인증 없이 접근 가능(로그인, 회원가입)
-					.requestMatchers("/", "/home","/security/signin", "/signup").permitAll()
+					.requestMatchers("/", "/home","/signin", "/signup").permitAll()
 
 					// ADMIN 권한이 있어야 접근 가능
 					.requestMatchers("/admin").hasRole("ADMIN")
@@ -42,7 +43,7 @@ public class SecurityConfig {
 				.permitAll()
         )
 				.formLogin((auth) -> auth
-						.loginPage("/security/signin")  // 사용자 정의 로그인 페이지
+						.loginPage("/signin")  // 사용자 정의 로그인 페이지
 						.loginProcessingUrl("/security-signin/loginProc")  // 로그인 처리 URL
 						.failureUrl("/signin?error=true")  // 로그인 실패 시 이동할 경로
 						.defaultSuccessUrl("/home", true)  // 로그인 성공 후 이동할 경로
@@ -51,7 +52,6 @@ public class SecurityConfig {
 						.permitAll()
 				)
 				.sessionManagement(session -> session
-						.invalidSessionUrl("/signin")  // 세션이 만료된 경우 리디렉션 경로 설정
 						.maximumSessions(1)  // 동시에 한 명의 사용자만 로그인 허용
 						.maxSessionsPreventsLogin(true)  // 기존 세션 종료를 막음, 새로운 로그인 차단
 				);

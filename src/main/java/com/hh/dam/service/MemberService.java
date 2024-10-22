@@ -34,7 +34,7 @@ public class MemberService {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
-    // 회원 로그인 처리
+    // 사용자 로그인 처리
     public Member signIn(SignInRequest signInRequest) {
         Optional<Member> findMember = memberRepository.findByUserId(signInRequest.getUserId());
 
@@ -62,20 +62,30 @@ public class MemberService {
     // 회원가입 처리
     public void securitySignUp(SignUpRequest signUpRequest) {
         if (memberRepository.existsByUserId(signUpRequest.getUserId())) {
-            return;
+            throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
 
-        signUpRequest.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        memberRepository.save(signUpRequest.toEntity());
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
+
+        // 엔티티로 변환하여 저장
+        Member member = signUpRequest.toEntity(encodedPassword);
+        memberRepository.save(member);
+
+        // 비밀번호 일치 여부
+        if (!signUpRequest.getPassword().equals(signUpRequest.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
+
 
     // 회원 정보 업데이트
     public void updateMember(Member member) {
-        memberRepository.save(member); // 회원 정보를 업데이트
+        memberRepository.save(member);
     }
 
     // 비밀번호 암호화 처리
     public String encodePassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword); // 비밀번호 암호화
+        return passwordEncoder.encode(rawPassword);
     }
 }

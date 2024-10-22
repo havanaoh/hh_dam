@@ -7,7 +7,7 @@ import com.hh.dam.entity.Member;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-    boolean existsByUserId(String UserId);
+    boolean existsByUserId(String memberId);
 
-    Optional<Member> findByUserId(String userId);
+    Optional<Member> findByUserId(String memberId);
 }

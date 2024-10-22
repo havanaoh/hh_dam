@@ -6,13 +6,13 @@
 </head>
 <body>
 <div>
-    <h1><a th:href="|/${loginType}|">[[${pageName}]]</a></h1> <hr/>
+    <h1 th:text="${pageName}">회원가입</h1>
     <h2>회원 가입</h2>
-    <form th:method="post" th:action="|@{/{loginType}/join (loginType=${loginType})}|" th:object="${joinRequest}">
+    <form method="post" th:action="@{/signup}" th:object="${signUpRequest}">
         <div>
-            <label th:for="loginId">ID : </label>
-            <input type="text" th:field="*{loginId}" th:errorclass="error-input"/>
-            <div class="error-class" th:errors="*{loginId}"></div>
+            <label th:for="userId">아이디 : </label>
+            <input type="text" th:field="*{userId}" th:errorclass="error-input"/>
+            <div class="error-class" th:errors="*{userId}"></div>
         </div>
         <br/>
         <div>
@@ -28,9 +28,15 @@
         </div>
         <br/>
         <div>
-            <label th:for="name">이름 : </label>
-            <input type="text" th:field="*{name}" th:errorclass="error-input"/>
-            <div class="error-class" th:errors="*{name}"></div>
+            <label th:for="email">이메일 : </label>
+            <input type="email" th:field="*{email}" th:errorclass="error-input"/>
+            <div class="error-class" th:errors="*{userId}"></div>
+        </div>
+        <br/>
+        <div>
+            <label th:for="nickname">닉네임 : </label>
+            <input type="text" th:field="*{nickname}" th:errorclass="error-input"/>
+            <div class="error-class" th:errors="*{nickname}"></div>
         </div>
         <br/>
         <button type="submit">회원 가입</button>
