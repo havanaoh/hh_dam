@@ -7,11 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-<<<<<<< Updated upstream
 import java.sql.Timestamp;
 
-=======
->>>>>>> Stashed changes
+
 @Data
 @NoArgsConstructor
 public class SignUpRequest {
