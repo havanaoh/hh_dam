@@ -45,7 +45,7 @@ public class Member {
     @Column(name = "Last_login")
     private Timestamp lastLogin;
 
-    @Column(name = "is_active", columnDefinition = "boolean default true")
+    @Column(name = "is_active", columnDefinition = "boolean default true") //휴면 여부
     private boolean isActive;
 
     @Column(name = "Report_time")
@@ -56,6 +56,12 @@ public class Member {
 
     @Column(name = "Image_id")
     private int imageId;
+
+    @PrePersist
+    protected void onCreate() {
+        this.joinDate = new Timestamp(System.currentTimeMillis());
+        this.isActive = true; // 기본값 true 설정
+    }
 
 }
 
