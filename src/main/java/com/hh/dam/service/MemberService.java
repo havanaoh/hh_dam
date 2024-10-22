@@ -39,13 +39,13 @@ public class MemberService {
         Optional<Member> findMember = memberRepository.findByUserId(signInRequest.getUserId());
 
         if (findMember.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
         }
 
         Member member = findMember.get();
 
         if (!passwordEncoder.matches(signInRequest.getPassword(), member.getPassword())) {
-            return null;
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
         return member;
@@ -65,6 +65,11 @@ public class MemberService {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
 
+        // 비밀번호 일치 여부
+        if (!signUpRequest.getPassword().equals(signUpRequest.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
 
@@ -72,10 +77,6 @@ public class MemberService {
         Member member = signUpRequest.toEntity(encodedPassword);
         memberRepository.save(member);
 
-        // 비밀번호 일치 여부
-        if (!signUpRequest.getPassword().equals(signUpRequest.getPasswordCheck())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
     }
 
 

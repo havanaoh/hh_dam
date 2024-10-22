@@ -66,9 +66,16 @@ public class SecuritySignInController {
             return "signup";
         }
 
-        memberService.securitySignUp(signUpRequest);
+        try {
+            memberService.securitySignUp(signUpRequest);
+        } catch (IllegalStateException e) {
+            bindingResult.reject("duplicateUserId", "이미 존재하는 아이디입니다.");
+            return "signup";
+        }
+
         return "redirect:/signin";
     }
+
 
     // 로그인 페이지
     @GetMapping("/signin")
@@ -79,12 +86,7 @@ public class SecuritySignInController {
 
         return "signin";
     }
-
-    @PostMapping("/signin")
-    public String signIn(@ModelAttribute SignInRequest signInRequest, BindingResult result, Model model) {
-        // 로그인 처리 로직 넣어야함
-        return "redirect:/home";
-    }
+    
 
     // 회원 정보 페이지
     @GetMapping("/info")

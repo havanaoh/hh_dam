@@ -11,17 +11,10 @@
     <h2>로그인</h2>
 
     <!-- 로그인 폼 -->
-<<<<<<< Updated upstream
-    <form method="post" th:action="@{/security/signin}" th:object="${signInRequest}">
+    <form method="post" th:action="@{/security-signin/loginProc}" th:object="${signInRequest}">
         <div>
             <label for="userId">ID : </label>
             <input type="text" th:field="*{userId}" id="userId" placeholder="아이디" required/>
-=======
-    <form method="post" th:action="@{/signin}" th:object="${signInRequest}">
-        <div>
-            <label for="uesrId">ID : </label>
-            <input type="text" th:field="*{uesrId}" id="uesrId" placeholder="아이디" required/>
->>>>>>> Stashed changes
         </div>
         <br/>
         <div>
