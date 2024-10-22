@@ -45,10 +45,10 @@ public class SecurityConfig {
 				.formLogin((auth) -> auth
 						.loginPage("/signin")  // 사용자 정의 로그인 페이지
 						.loginProcessingUrl("/security-signin/loginProc")  // 로그인 처리 URL
-						.failureUrl("/signin?error=true")  // 로그인 실패 시 이동할 경로
-						.defaultSuccessUrl("/home", true)  // 로그인 성공 후 이동할 경로
-						.usernameParameter("loginId")  // 로그인 폼의 사용자명 필드
+						.usernameParameter("userId")  // 로그인 폼의 사용자명 필드
 						.passwordParameter("password")  // 로그인 폼의 비밀번호 필드
+						.defaultSuccessUrl("/home", true)  // 로그인 성공 후 이동할 경로
+						.failureUrl("/signin?error=true")  // 로그인 실패 시 이동할 경로
 						.permitAll()
 				);
 //				.sessionManagement(session -> session
