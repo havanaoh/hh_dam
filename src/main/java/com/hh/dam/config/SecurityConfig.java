@@ -50,11 +50,11 @@ public class SecurityConfig {
 						.usernameParameter("loginId")  // 로그인 폼의 사용자명 필드
 						.passwordParameter("password")  // 로그인 폼의 비밀번호 필드
 						.permitAll()
-				)
-				.sessionManagement(session -> session
-						.maximumSessions(1)  // 동시에 한 명의 사용자만 로그인 허용
-						.maxSessionsPreventsLogin(true)  // 기존 세션 종료를 막음, 새로운 로그인 차단
 				);
+//				.sessionManagement(session -> session
+//						.maximumSessions(1)  // 동시에 한 명의 사용자만 로그인 허용
+//						.maxSessionsPreventsLogin(false)  // 기존 세션 종료를 막음, 새로운 로그인 차단
+//				);
 
 		return http.build();
 	}
