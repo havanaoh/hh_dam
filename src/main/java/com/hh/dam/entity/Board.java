@@ -19,8 +19,7 @@ public class Board {
     @Column(name = "GroupId")
     private int groupId;
 
-    @OneToMany(mappedBy = "Board")
+    @OneToMany(mappedBy = "board")  // 수정됨
     private List<Post> posts;
-
 
 }

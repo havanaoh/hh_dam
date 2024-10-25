@@ -43,13 +43,13 @@ public class Post {
     @Column(name = "ImageId")
     private int imageId;
 
-    @Column(name = "CommentCount", nullable = false, columnDefinition = "int default 0")
+    @Column(name = "commentCount", nullable = false, columnDefinition = "int default 0")
     private int commentCount;
 
     @Column(name = "plikes", nullable = false, columnDefinition = "int default 0")
     private int plikes;
 
-    @OneToMany(mappedBy = "Post")
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
 }
