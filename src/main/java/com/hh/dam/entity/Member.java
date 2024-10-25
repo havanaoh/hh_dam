@@ -39,22 +39,22 @@ public class Member {
     @Column(name = "Role", nullable = false, columnDefinition = "varchar(255) default 'USER'")
     private MemberRole role;
 
-    @Column(name = "Join_date", nullable = false, columnDefinition = "timestamp default current_timestamp")
+    @Column(name = "JoinDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
     private Timestamp joinDate;
 
-    @Column(name = "Last_login")
+    @Column(name = "LastLogin")
     private Timestamp lastLogin;
 
-    @Column(name = "is_active", columnDefinition = "boolean default true") //휴면 여부
+    @Column(name = "IsActive", columnDefinition = "boolean default true") //휴면 여부
     private boolean isActive;
 
-    @Column(name = "Report_time")
+    @Column(name = "ReportTime")
     private int reportTime;
 
-    @Column(name = "Report_reason")
+    @Column(name = "ReportReason")
     private String reportReason;
 
-    @Column(name = "Image_id")
+    @Column(name = "ImageId")
     private int imageId;
 
     @PrePersist
