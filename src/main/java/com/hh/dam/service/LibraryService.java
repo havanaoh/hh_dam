@@ -23,14 +23,11 @@ import java.util.List;
 @Service
 public class LibraryService {
 
-    private final BookRepository bookRepository;
-    private final LibraryRepository libraryRepository;
-
     @Autowired
-    public LibraryService(BookRepository bookRepository, LibraryRepository libraryRepository) {
-        this.bookRepository = bookRepository;
-        this.libraryRepository = libraryRepository;
-    }
+    private BookRepository bookRepository;
+    @Autowired
+    private LibraryRepository libraryRepository;
+
 
     @Value("${aladin.api.key}")
     private String aladinApiKey;

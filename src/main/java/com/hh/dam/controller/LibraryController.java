@@ -1,12 +1,10 @@
 package com.hh.dam.controller;
 
-import com.hh.dam.entity.Book;
 import com.hh.dam.entity.Library;
 import com.hh.dam.entity.Member;
 import com.hh.dam.service.LibraryService;
 import com.hh.dam.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +16,11 @@ import java.util.List;
 @RequestMapping("/library")
 public class LibraryController {
 
-    final private LibraryService libraryService;
-    final private MemberService memberService;
+    @Autowired
+    private LibraryService libraryService;
+    @Autowired
+    private MemberService memberService;
 
-    public LibraryController(LibraryService libraryService, MemberService memberService) {
-        this.libraryService = libraryService;
-        this.memberService = memberService;
-    }
 
     @GetMapping("/my")
     public String library(){

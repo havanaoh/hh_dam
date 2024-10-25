@@ -25,12 +25,11 @@ public class BookService {
 
     @Value("{aladin.api.key}")
     private String ttbKey;
-    private final BookRepository bookRepository;
 
+    private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-
     }
 
     public List<BookDTO> searchBooks(String query) {

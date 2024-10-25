@@ -16,7 +16,7 @@ public class Post {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    @Column(name = "MmemberId", nullable = false)
+    @Column(name = "memberId", nullable = false)
     private int memberId;
 
     @Column(name = "bookId", nullable = false)
