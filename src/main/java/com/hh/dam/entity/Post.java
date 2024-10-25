@@ -13,43 +13,43 @@ public class Post {
     private int postId;
 
     @ManyToOne
-    @JoinColumn(name = "board_id", nullable = false)
+    @JoinColumn(name = "BoardId", nullable = false)
     private Board board;
 
-    @Column(name = "MmemberId", nullable = false)
+    @Column(name = "MemberId", nullable = false)
     private int memberId;
 
-    @Column(name = "bookId", nullable = false)
+    @Column(name = "BookId", nullable = false)
     private int bookId;
 
-    @Column(name = "postTitle", nullable = false)
+    @Column(name = "PostTitle", nullable = false)
     private String postTitle;
 
-    @Column(name = "postContent", nullable = false)
+    @Column(name = "PostContent", nullable = false)
     private String postContent;
 
-    @Column(name = "views", nullable = false, columnDefinition = "int default 0")
+    @Column(name = "Views", nullable = false, columnDefinition = "int default 0")
     private int views;
 
-    @Column(name = "createdDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
+    @Column(name = "CreatedDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
     private Timestamp createdDate;
 
-    @Column(name = "modifiedDate")
+    @Column(name = "ModifiedDate")
     private Timestamp modifiedDate;
 
-    @Column(name = "field")
+    @Column(name = "Field")
     private int field;
 
-    @Column(name = "imageId")
+    @Column(name = "ImageId")
     private int imageId;
 
-    @Column(name = "commentCount", nullable = false, columnDefinition = "int default 0")
+    @Column(name = "CommentCount", nullable = false, columnDefinition = "int default 0")
     private int commentCount;
 
     @Column(name = "plikes", nullable = false, columnDefinition = "int default 0")
     private int plikes;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "Post")
     private List<Comment> comments;
 
 }
