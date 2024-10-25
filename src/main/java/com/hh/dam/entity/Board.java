@@ -13,14 +13,13 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int boardId;
 
-    @Column(name = "boardName", nullable = false, length = 20)
+    @Column(name = "BoardName", nullable = false, length = 20)
     private String boardName;
 
-    @Column(name = "groupId")
+    @Column(name = "GroupId")
     private int groupId;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board")  // 수정됨
     private List<Post> posts;
-
 
 }

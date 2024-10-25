@@ -1,21 +1,21 @@
 package com.hh.dam.service;
 
+import com.hh.dam.dto.AladinApiResponse;
+import com.hh.dam.dto.BookDTO;
 import com.hh.dam.entity.Book;
-import com.hh.dam.entity.BookStatus;
-import com.hh.dam.entity.Library;
 import com.hh.dam.repository.BookRepository;
-import com.hh.dam.repository.LibraryRepository;
 import jakarta.transaction.Transactional;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -23,14 +23,29 @@ import java.util.List;
 @Transactional
 public class BookService {
 
-    private final BookRepository bookRepository;
+    @Value("{aladin.api.key}")
+    private String ttbKey;
 
+    private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-
     }
 
+    public List<BookDTO> searchBooks(String query) {
+        RestTemplate restTemplate = new RestTemplate();
+        String ALADIN_API_URL = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
+        String url = ALADIN_API_URL + "?ttbkey=" + ttbKey + "&Query=" + query + "&output=js";
+
+        // API 호출 및 결과 받아오기
+        AladinApiResponse response = restTemplate.getForObject(url, AladinApiResponse.class);
+
+        // 응답 결과를 BookDTO 리스트로 변환 후 반환
+        return response.getItem();  // 필요에 따라 변환 로직 추가
+    }
+
+
+    //지울 예정?
     public int addBook(String QueryType){
 
         String apiURL = "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
@@ -101,13 +116,7 @@ public class BookService {
                 }
             }
         }
-
-
-
         return count;
     }
-
-
-
 
 }

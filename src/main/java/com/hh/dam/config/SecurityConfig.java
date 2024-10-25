@@ -9,8 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -20,13 +18,14 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(authorize -> authorize
 					// 인증 없이 접근 가능(로그인, 회원가입)
+
 					.requestMatchers("/", "/home","/signin", "/signup").permitAll()
 
 					// ADMIN 권한이 있어야 접근 가능
 					.requestMatchers("/admin").hasRole("ADMIN")
 
 					// ADMIN 또는 USER 권한을 가진 사용자만 접근 가능
-                    .requestMatchers("/info").hasAnyRole("ADMIN", "USER")
+                    .requestMatchers("/info", "/book/**", "/library/**", "/board/**").hasAnyRole("ADMIN", "USER")
 
 					// 그 외 모든 요청은 인증된 사용자만 접근 가능
                     .anyRequest().authenticated()

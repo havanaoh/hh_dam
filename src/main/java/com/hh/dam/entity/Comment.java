@@ -14,16 +14,16 @@ public class Comment {
     private int commentId;
 
     @ManyToOne
-    @JoinColumn(name = "postId", nullable = false)
+    @JoinColumn(name = "PostId", nullable = false)
     private Post post;
 
-    @Column(name = "boardId", nullable = false)
+    @Column(name = "BoardId", nullable = false)
     private int boardId;
 
-    @Column(name = "memberId", nullable = false)
+    @Column(name = "MemberId", nullable = false)
     private int memberId;
 
-    @Column(name = "createdDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
+    @Column(name = "CreatedDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
     private Timestamp createdDate;
 
 }

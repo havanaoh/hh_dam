@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>내 서재 - 찜 목록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        function searchBooks() {
+            var query = $("#searchQuery").val();  // 검색어 가져오기
+
+            $.ajax({
+                url: '/book/api/my-library/search',
+                type: 'GET',
+                data: { query: query },
+                success: function(result) {
+                    var resultDiv = $("#searchResults");
+                    resultDiv.empty();  // 기존 검색 결과 비우기
+
+                    if (result.length === 0) {
+                        resultDiv.append("<p>검색 결과가 없습니다.</p>");
+                    } else {
+                        result.forEach(function(book) {
+                            resultDiv.append(
+                                "<div>" +
+                                "<span>" + book.title + "</span> - " +
+                                "<span>" + book.author + "</span> " +
+                                "<a href='/my-library/add-to-wishlist/" + book.id + "'>등록</a>" +
+                                "</div>"
+                            );
+                        });
+                    }
+                },
+                error: function() {
+                    alert("검색 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<h1>내 서재 - 찜 목록</h1>
+<ul>
+    <li th:each="book : ${books}">
+        <span th:text="${book.bookTitle}"></span> -
+        <span th:text="${book.author}"></span>
+        <button onclick="openReadingModal([[${book.bookId}]])">읽기 시작</button>
+    </li>
+</ul>
+
+<!-- 모달 창 (hidden 상태로 시작) -->
+<div id="readingModal" style="display:none;">
+    <div>
+        <h2>책 읽기 진행 상황</h2>
+        <form id="readingForm">
+            <input type="hidden" id="libraryId">
+            <p>책 제목: <span id="modalBookTitle"></span></p>
+            <p>현재 페이지: <input type="number" id="currentPage"></p>
+            <button type="button" onclick="saveReadingProgress()">저장</button>
+        </form>
+        <button onclick="closeModal()">닫기</button>
+    </div>
+</div>
+
+<script>
+    function openReadingModal(bookId) {
+        // Ajax를 사용하여 선택한 책의 정보를 불러오기
+        $.ajax({
+            url: '/book/my-library/read/' + bookId,
+            method: 'GET',
+            success: function(data) {
+                // 모달 창에 책 정보 채우기
+                $('#libraryId').val(data.libraryId);
+                $('#modalBookTitle').text(data.bookTitle);
+                $('#currentPage').val(data.currentPage);
+
+                // 모달 창을 보이게 하기
+                $('#readingModal').show();
+            },
+            error: function() {
+                alert('책 정보를 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    function saveReadingProgress() {
+        var libraryId = $('#libraryId').val();
+        var currentPage = $('#currentPage').val();
+
+        $.ajax({
+            url: '/book/my-library/update-progress',
+            method: 'POST',
+            data: {
+                libraryId: libraryId,
+                currentPage: currentPage
+            },
+            success: function() {
+                alert('독서 진행 상황이 저장되었습니다.');
+                closeModal();  // 모달 창 닫기
+            },
+            error: function() {
+                alert('저장 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    function closeModal() {
+        $('#readingModal').hide();  // 모달 창 닫기
+    }
+</script>
+
+<!-- 책 검색 폼 -->
+<div>
+    <h2>책 등록하기</h2>
+    <input type="text" id="searchQuery" placeholder="책 제목 또는 저자 검색">
+    <button onclick="searchBooks()">검색</button>
+</div>
+
+<!-- 검색 결과를 동적으로 표시할 영역 -->
+<div id="searchResults">
+    <!-- AJAX로 검색 결과를 이곳에 추가 -->
+</div>
+
+</body>
+</html>
