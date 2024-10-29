@@ -1,12 +1,15 @@
 package com.hh.dam.controller;
 
 import com.hh.dam.dto.BookDTO;
+import com.hh.dam.dto.CustomMemberDetails;
 import com.hh.dam.dto.LibraryDTO;
 import com.hh.dam.entity.Library;
 import com.hh.dam.entity.Member;
 import com.hh.dam.service.BookService;
 import com.hh.dam.service.LibraryService;
+import com.hh.dam.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +27,8 @@ public class BookController {
 
     private final BookService bookService;
     private final LibraryService libraryService;
+    @Autowired
+    private MemberService memberService;
 
     public BookController(BookService bookService, LibraryService libraryService) {
         this.bookService = bookService;
@@ -52,11 +58,14 @@ public class BookController {
     // 읽은 페이지 입력 폼을 Ajax로 제공하는 메서드
     @GetMapping("/library/read/{bookId}")
     @ResponseBody
-    public LibraryDTO getReadingForm(@PathVariable int bookId, @AuthenticationPrincipal Member member) {
+    public LibraryDTO getReadingForm(@PathVariable int bookId, @AuthenticationPrincipal CustomMemberDetails userDetails) {
+        if (userDetails == null) {
+            throw new IllegalArgumentException("User not authenticated");
+        }
+        Member member = userDetails.getMember(); // CustomMemberDetails에서 Member 가져오기
         Library library = libraryService.getLibraryByBookIdAndMember(bookId, member);
         return new LibraryDTO(library.getLibraryId(), library.getBook().getBookTitle(), library.getCurrentPage());
     }
-
     // 읽은 페이지 수를 업데이트하는 메서드
     @PostMapping("/library/update-progress")
     @ResponseBody

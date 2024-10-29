@@ -11,18 +11,17 @@ import com.hh.dam.entity.Library;
 import com.hh.dam.entity.Member;
 import com.hh.dam.repository.BookRepository;
 import com.hh.dam.repository.LibraryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class LibraryService {
 
     @Autowired
@@ -47,26 +46,42 @@ public class LibraryService {
 
     @Transactional
     public void addBookToDatabaseAndLibrary(BookDTO bookDTO, Member member) {
-        // BookDTO 정보를 이용해 Book 엔티티 생성
-        Book book = new Book();
-        book.setBookTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setPublisher(bookDTO.getPublisher());
-        book.setCover(bookDTO.getCover());
-        book.setIsbn(bookDTO.getIsbn());
-        book.setTotalPage(bookDTO.getTotalPage());
+        log.info("입력받은 ISBN: {}", bookDTO.getIsbn());
+        // 1. ISBN으로 책을 조회하여 DB에 이미 등록되어 있는지 확인
+        Optional<Book> existingBook = bookRepository.findByIsbn(bookDTO.getIsbn());
+        log.info("DB에서 ISBN {}으로 조회한 책: {}", bookDTO.getIsbn(), existingBook);
+        Book book;
+        if (existingBook.isPresent()) {
+            // 책이 이미 DB에 있을 경우
+            book = existingBook.get();
+            log.info("책이 이미 DB에 존재합니다. 책 ID: {}", book.getBookId());
+        } else {
+            // 책이 DB에 없을 경우 새로운 Book 엔티티 생성 및 저장
+            book = new Book();
+            book.setBookTitle(bookDTO.getTitle());
+            book.setAuthor(bookDTO.getAuthor());
+            book.setPublisher(bookDTO.getPublisher());
+            book.setCover(bookDTO.getCover());
+            book.setIsbn(bookDTO.getIsbn());
+            book.setTotalPage(bookDTO.getTotalPage());
+            book = bookRepository.save(book);  // DB에 저장
+            log.info("책이 DB에 저장되었습니다. 책 ID: {}", book.getBookId());
+        }
 
-        // DB에 Book 저장
-        Book savedBook = bookRepository.save(book);
+        // 2. 해당 회원의 서재에 이미 책이 있는지 확인
+        boolean alreadyInLibrary = libraryRepository.existsByMemberAndBook(member, book);
 
-        // Library 엔티티 생성 및 설정
-        Library library = new Library();
-        library.setBook(savedBook);
-        library.setMember(member);
-        library.setStatus(BookStatus.찜); // 기본적으로 찜 목록 상태로 설정
-
-        // 서재에 추가
-        libraryRepository.save(library);
+        if (!alreadyInLibrary) {
+            // 서재에 책이 없을 경우에만 Library 엔티티를 생성하여 저장
+            Library library = new Library();
+            library.setBook(book);
+            library.setMember(member);
+            library.setStatus(BookStatus.찜); // 기본적으로 찜 상태로 설정
+            libraryRepository.save(library);  // 서재에 추가
+        } else {
+            // 서재에 이미 책이 있을 경우 로직
+            System.out.println("이 책은 이미 회원의 서재에 등록되어 있습니다.");
+        }
     }
 
     public boolean removeFromWishlist(Member member, int bookId) {
@@ -97,6 +112,7 @@ public class LibraryService {
         // Book 객체와 Member로 Library 조회
         return libraryRepository.findByBookAndMember(book, member)
                 .orElseThrow(() -> new RuntimeException("해당 도서 기록을 찾을 수 없습니다."));
+
     }
 
     @Transactional

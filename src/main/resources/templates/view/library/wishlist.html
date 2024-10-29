@@ -83,10 +83,17 @@
                 data: { bookId: bookId },
                 success: function(response) {
                     console.log("Remove response: " + response);
-                    // 성공적으로 제거되었을 때 UI 업데이트 로직 추가
+                    // 성공적으로 제거되었을 때 UI에서 해당 책을 제거
+                    $("button[onclick='removeFromWishlist(" + bookId + ")']").closest("li").remove();
+
+                    // 남은 찜 목록이 비어 있는지 확인하고, 비어 있다면 안내 메시지를 표시
+                    if ($("ul li").length === 0) {
+                        $("ul").after("<p>책을 등록해주세요.</p>");
+                    }
                 },
                 error: function(xhr) {
                     console.error("Error occurred while removing from wishlist: " + xhr.responseText);
+                    alert("찜 해제에 실패했습니다.");
                 }
             });
         }
@@ -106,11 +113,15 @@
                 url: '/book/library/read/' + bookId,
                 method: 'GET',
                 success: function(data) {
-                    $('#libraryId').val(data.libraryId);
-                    $('#modalBookTitle').text(data.bookTitle);
-                    $('#currentPage').val(data.currentPage);
-                    $('#readingModal').show();
-                    $("#modalOverlay").show();
+                    if (data) {
+                        $('#libraryId').val(data.libraryId);
+                        $('#modalBookTitle').text(data.bookTitle);
+                        $('#currentPage').val(data.currentPage);
+                        $('#readingModal').show();
+                        $("#modalOverlay").show();
+                    } else {
+                        alert('등록된 책이 없습니다.'); // 데이터가 없는 경우 처리
+                    }
                 },
                 error: function() {
                     alert('책 정보를 불러오는 데 실패했습니다.');
@@ -164,10 +175,11 @@
 <ul th:if="${!isEmpty}">
     <li th:each="library : ${wishList}">
         <div>
-            <img th:src="${library.book.cover}" alt="책 표지" style="width: 100px; height: 150px;">
+            <img th:src="${library.book.cover}" alt="책 표지" style="width: 100px; height: 150px;"
+                 th:onclick="'openReadingModal(' + ${library.book.bookId} + ')'"> <!-- 수정된 onclick -->
             <br>
             <span th:text="${library.book.bookTitle}"></span> - <span th:text="${library.book.author}"></span>
-            <button onclick="removeFromWishlist([[${library.book.bookId}]])">찜 해제</button>
+            <button th:onclick="'removeFromWishlist(' + ${library.book.bookId} + ')'">찜 해제</button>
         </div>
     </li>
 </ul>

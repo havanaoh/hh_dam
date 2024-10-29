@@ -16,4 +16,6 @@ public interface LibraryRepository extends JpaRepository<Library, Integer> {
     List<Library> findByMemberAndStatus(Member member, BookStatus status);
 
     Optional<Library> findByBookAndMember(Book book, Member member);
+
+    boolean existsByMemberAndBook(Member member, Book book);
 }
