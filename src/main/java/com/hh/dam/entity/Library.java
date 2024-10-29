@@ -13,7 +13,7 @@ public class Library {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int libraryId;
     @OneToOne
-    @JoinColumn(name = "member_id", nullable = false, unique = true) // 유일한 관계 설정
+    @JoinColumn(name = "member_id", nullable = false) // 유일한 관계 설정
     private Member member;
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false) // Foreign Key, Book ID

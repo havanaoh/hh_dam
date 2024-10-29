@@ -1,12 +1,15 @@
 package com.hh.dam.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hh.dam.dto.AladinApiResponse;
 import com.hh.dam.dto.BookDTO;
 import com.hh.dam.entity.Book;
 import com.hh.dam.repository.BookRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,13 +20,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class BookService {
 
-    @Value("{aladin.api.key}")
+    @Value("${aladin.api.key}")
     private String ttbKey;
 
     private final BookRepository bookRepository;
@@ -33,15 +40,32 @@ public class BookService {
     }
 
     public List<BookDTO> searchBooks(String query) {
+        // encode 되어있는 경우 decode
+        try{
+            query = java.net.URLDecoder.decode(query, "UTF-8");
+        } catch (Exception e) {
+            // 건너뛰기
+        }
         RestTemplate restTemplate = new RestTemplate();
         String ALADIN_API_URL = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-        String url = ALADIN_API_URL + "?ttbkey=" + ttbKey + "&Query=" + query + "&output=js";
+        String url = ALADIN_API_URL + "?ttbkey=" + ttbKey + "&query=" + query +
+                "&QueryType=Keyword&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101";
 
         // API 호출 및 결과 받아오기
         AladinApiResponse response = restTemplate.getForObject(url, AladinApiResponse.class);
 
         // 응답 결과를 BookDTO 리스트로 변환 후 반환
         return response.getItem();  // 필요에 따라 변환 로직 추가
+    }
+
+    public BookDTO findBookByItemId(String query, int itemId) {
+        List<BookDTO> searchResults = searchBooks(query);
+
+        // itemId로 검색 결과에서 특정 책 찾기
+        return searchResults.stream()
+                .filter(book -> book.getItemId() == itemId)
+                .findFirst()
+                .orElse(null);
     }
 
 
@@ -104,7 +128,7 @@ public class BookService {
                     Book book = Book.builder()
                             .isbn(list.getString("isbn13"))
                             .bookTitle(list.getString("title"))
-                            .bookCover(list.getString("cover"))
+                            .cover(list.getString("cover"))
                             .author(list.getString("author"))
                             .publisher(list.getString("publisher"))
                             .build();

@@ -4,11 +4,12 @@ import lombok.Data;
 
 @Data
 public class BookDTO {
-    private String bookTitle;
+    private String title;
     private String author;
     private String publisher;
-    private String bookCover;
+    private String cover;
     private String isbn;
+    private int itemId;
     private int totalPage;
     // 필요한 필드 추가
 

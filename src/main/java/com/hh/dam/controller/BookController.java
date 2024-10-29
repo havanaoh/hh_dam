@@ -7,7 +7,7 @@ import com.hh.dam.entity.Member;
 import com.hh.dam.service.BookService;
 import com.hh.dam.service.LibraryService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,8 @@ public class BookController {
         this.libraryService = libraryService;
     }
 
-    @GetMapping("/api/my-library/search")
+    @GetMapping("/api/library/search")
+    @ResponseBody
     public List<BookDTO> searchBooks(@RequestParam("query") String query) {
         // BookService를 이용해 책 검색 수행
         return bookService.searchBooks(query);

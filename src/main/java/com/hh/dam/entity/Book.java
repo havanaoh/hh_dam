@@ -21,7 +21,7 @@ public class Book {
     private String bookTitle;
     private String author;
     private String publisher;
-    private String bookCover;
+    private String cover;
     private String isbn;
     private int totalPage;
     private Timestamp bookCreated;
