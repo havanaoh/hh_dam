@@ -1,13 +1,13 @@
 package com.hh.dam.entity;
 
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 @Table(name = "Post")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postId;
@@ -49,7 +49,7 @@ public class Post {
     @Column(name = "plikes", nullable = false, columnDefinition = "int default 0")
     private int plikes;
 
-    @OneToMany(mappedBy = "Post")
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments;
 
 }

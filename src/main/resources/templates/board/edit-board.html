@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시판 수정</title>
+</head>
+<body>
+<h1>게시판 수정</h1>
+<form th:action="@{/boards/{boardId}(boardId=${board.boardId})}" method="post">
+  <input type="hidden" name="_method" value="put"/>
+
+  <label for="groupId">그룹 ID:</label>
+  <input type="number" id="groupId" name="groupId" th:value="${board.groupId}" required><br><br>
+
+  <label for="boardName">게시판 이름:</label>
+  <input type="text" id="boardName" name="boardName" th:value="${board.boardName}" required><br><br>
+
+  <button type="submit">수정</button>
+</form>
+<a href="/boards">뒤로</a>
+</body>
+</html>
