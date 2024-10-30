@@ -75,7 +75,15 @@ public class LibraryController {
         return "redirect:/library/wishlist";  // 찜 목록 페이지로 리다이렉트
     }
 
+    @GetMapping("/reading")
+    public String viewReadingList(Model model, Principal principal) {
+        Member member = memberService.findByUserId(principal.getName());
+        List<Library> readingList = libraryService.getReadingBooks(member);
 
+        model.addAttribute("readingList", readingList);
+        model.addAttribute("isEmpty", readingList.isEmpty());
+        return "library/reading";
+    }
 
 
 

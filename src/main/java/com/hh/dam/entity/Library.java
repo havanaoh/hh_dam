@@ -12,7 +12,7 @@ public class Library {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int libraryId;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id", nullable = false) // 유일한 관계 설정
     private Member member;
     @ManyToOne

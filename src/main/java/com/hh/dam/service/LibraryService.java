@@ -39,6 +39,10 @@ public class LibraryService {
         return libraryRepository.findByMemberAndStatus(member, BookStatus.찜);
     }
 
+    public List<Library> getReadingBooks(Member member){
+        return libraryRepository.findByMemberAndStatus(member, BookStatus.읽는중);
+    }
+
     public boolean isBookRegistered(String isbn) {
         return bookRepository.existsByIsbn(isbn);
     }

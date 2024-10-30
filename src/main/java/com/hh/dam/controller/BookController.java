@@ -69,8 +69,8 @@ public class BookController {
     // 읽은 페이지 수를 업데이트하는 메서드
     @PostMapping("/library/update-progress")
     @ResponseBody
-    public ResponseEntity<?> updateReadingProgress(@RequestParam int libraryId, @RequestParam int currentPage) {
-        libraryService.updateReadingProgress(libraryId, currentPage);
+    public ResponseEntity<?> updateReadingProgress(@RequestParam int bookId, @RequestParam int currentPage) {
+        libraryService.updateReadingProgress(bookId, currentPage);
         return ResponseEntity.ok().build();  // 성공 시 200 OK 반환
     }
 

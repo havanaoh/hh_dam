@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>독서 진행 중</title>
+  <script type="text/javascript">
+
+    function saveReadingProgress() {
+      var bookId = $('#bookId').val();
+      var currentPage = $('#currentPage').val();
+
+      $.ajax({
+        url: '/book/library/update-progress',
+        method: 'POST',
+        data: {
+          libraryId: bookId,
+          currentPage: currentPage
+        },
+        success: function() {
+          alert('독서 진행 상황이 저장되었습니다.');
+          closeModal();
+        },
+        error: function() {
+          alert('저장 중 오류가 발생했습니다.');
+        }
+      });
+    }
+
+    function closeModal() {
+      $('#readingModal').hide();
+      $("#modalOverlay").hide();
+    }
+
+    function checkEnter(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Enter 키 기본 동작 방지
+        searchBooks();
+      }
+    }
+  </script>
+</head>
+<body>
+
+<div class="container">
+  <h1>독서 진행 중</h1>
+  <div th:if="${isEmpty}">
+    <p>책을 등록해주세요.</p>
+  </div>
+
+  <ul th:if="${!isEmpty}">
+    <li th:each="library : ${readingList}">
+      <div>
+        <img th:src="${library.book.cover}" alt="책 표지" style="width: 100px; height: 150px;"
+             th:onclick="'saveReadingProgress(' + ${library.book.bookId} + ')'"> <!-- 수정된 onclick -->
+        <br>
+        <span th:text="${library.book.bookTitle}"></span> - <span th:text="${library.book.author}"></span>
+
+      </div>
+    </li>
+  </ul>
+
+  <nav>
+    <ul>
+      <li><a href="/library/my">내 서재</a></li>
+    </ul>
+  </nav>
+
+
+</div>
+
+</body>
+</html>
