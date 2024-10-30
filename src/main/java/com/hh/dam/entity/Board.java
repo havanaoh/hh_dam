@@ -19,7 +19,7 @@ public class Board {
     @Column(name = "GroupId")
     private int groupId;
 
-    @OneToMany(mappedBy = "Board")
+    @OneToMany(mappedBy = "board")
     private List<Post> posts;
 
 
