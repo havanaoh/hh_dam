@@ -18,13 +18,13 @@ public class PostService {
     }
 
     // 특정 추천 수 이상의 게시물 조회
-    public List<Post> getPopularPosts(int minPlikes) {
-        return postRepository.findPopularPosts(minPlikes);
+    public List<Post> getPopularPosts() {
+        return postRepository.findPopularPosts();
     }
 
     // 특정 게시판 ID의 게시물 조회
     public List<Post> getPostsByBoardId(int boardId) {
-        return postRepository.findByBoardId(boardId);
+        return postRepository.findByBoard_BoardId(boardId);
     }
 
     // 특정 작성자의 게시물 조회

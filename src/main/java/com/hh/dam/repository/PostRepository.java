@@ -11,7 +11,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
     // Board의 boardId를 기준으로 게시물 조회
-    List<Post> findByBoardId(int boardId);
+    List<Post> findByBoard_BoardId(int boardId);
 
     // 특정 작성자의 게시물 조회
     List<Post> findByMemberId(int memberId);
