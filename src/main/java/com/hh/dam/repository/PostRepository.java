@@ -19,7 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     // Board의 groupId(카테고리분류)를 기준으로 게시물 조회
     List<Post> findByBoard_GroupId(int groupId);
 
-    // 특정 추천 수 기준으로 인기 게시물 조회 (추천 수 내림차순 정렬)
     // 추천 수가 10 이상인 인기 게시물 조회 (조회 수 내림차순 정렬)
     @Query("SELECT p FROM Post p WHERE p.plikes >= 10 ORDER BY p.views DESC")
     List<Post> findPopularPosts();
