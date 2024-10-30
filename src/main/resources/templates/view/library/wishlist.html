@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 서재 - 찜 목록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #searchModal, #readingModal {
+            display: none; /* 모달은 기본적으로 숨김 상태 */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px #aaa;
+        }
+        #modalOverlay {
+            display: none; /* 오버레이 기본 숨김 상태 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+    <script type="text/javascript">
+        function searchBooks() {
+            var query = $("#searchQuery").val(); // 수정된 ID 사용
+            var encodedQuery = encodeURIComponent(query); // 쿼리 인코딩
+
+            $.ajax({
+                url: '/book/api/library/search',
+                type: 'GET',
+                data: { query: encodedQuery },
+                success: function(result) {
+                    var resultDiv = $("#searchResults");
+                    resultDiv.empty();
+
+                    if (result.length === 0) {
+                        resultDiv.append("<p>검색 결과가 없습니다.</p>");
+                    } else {
+                        result.forEach(function(book) {
+                            resultDiv.append(
+                                "<div>" +
+                                "<img src='" + book.cover + "' alt='" + book.title + "' style='width: 30px; height: auto;' /> - " + // 이미지 추가
+                                "<span>" + book.title + "</span> - " +
+                                "<span>" + book.author + "</span> " +
+                                // 인자로 book.itemId와 encodedQuery를 함께 전달
+                                "<button onclick='addToWishlist(" + book.itemId + ", \"" + encodedQuery + "\")'>등록</button>" +
+                                "</div>"
+                            );
+                        });
+                    }
+                },
+                error: function() {
+                    alert("검색 중 오류가 발생했습니다.");
+                }
+            });
+        }
+
+        function addToWishlist(bookId, query) {
+            $.ajax({
+                url: '/library/add-wishlist/' + bookId,
+                type: 'POST',
+                data: { query: query }, // query 파라미터 추가
+                success: function(response) {
+                    alert("책이 찜 목록에 추가되었습니다.");
+                },
+                error: function() {
+                    alert("책을 찜 목록에 추가하는 중 오류가 발생했습니다.");
+                }
+            });
+        }
+
+        function removeFromWishlist(bookId) {
+            console.log("Attempting to remove book from wishlist - Book ID: " + bookId);
+
+            $.ajax({
+                url: '/library/wishlist/remove',
+                type: 'POST',
+                data: { bookId: bookId },
+                success: function(response) {
+                    console.log("Remove response: " + response);
+                    // 성공적으로 제거되었을 때 UI에서 해당 책을 제거
+                    $("button[onclick='removeFromWishlist(" + bookId + ")']").closest("li").remove();
+
+                    // 남은 찜 목록이 비어 있는지 확인하고, 비어 있다면 안내 메시지를 표시
+                    if ($("ul li").length === 0) {
+                        $("ul").after("<p>책을 등록해주세요.</p>");
+                    }
+                },
+                error: function(xhr) {
+                    console.error("Error occurred while removing from wishlist: " + xhr.responseText);
+                    alert("찜 해제에 실패했습니다.");
+                }
+            });
+        }
+
+        function openSearchModal() {
+            $("#modalOverlay").show();
+            $("#searchModal").show();
+        }
+
+        function closeSearchModal() {
+            $("#modalOverlay").hide();
+            $("#searchModal").hide();
+        }
+
+        function openReadingModal(bookId) {
+            $.ajax({
+                url: '/book/library/read/' + bookId,
+                method: 'GET',
+                success: function(data) {
+                    if (data) {
+                        $('#libraryId').val(data.libraryId);
+                        $('#modalBookTitle').text(data.bookTitle);
+                        $('#currentPage').val(data.currentPage);
+                        $('#readingModal').show();
+                        $("#modalOverlay").show();
+                    } else {
+                        alert('등록된 책이 없습니다.'); // 데이터가 없는 경우 처리
+                    }
+                },
+                error: function() {
+                    alert('책 정보를 불러오는 데 실패했습니다.');
+                }
+            });
+        }
+
+        function saveReadingProgress() {
+            var libraryId = $('#libraryId').val();
+            var currentPage = $('#currentPage').val();
+
+            $.ajax({
+                url: '/book/library/update-progress',
+                method: 'POST',
+                data: {
+                    libraryId: libraryId,
+                    currentPage: currentPage
+                },
+                success: function() {
+                    alert('독서 진행 상황이 저장되었습니다.');
+                    closeModal();
+                },
+                error: function() {
+                    alert('저장 중 오류가 발생했습니다.');
+                }
+            });
+        }
+
+        function closeModal() {
+            $('#readingModal').hide();
+            $("#modalOverlay").hide();
+        }
+
+        function checkEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Enter 키 기본 동작 방지
+                searchBooks();
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div id="modalOverlay"></div>
+
+<h1>내 서재 - 찜 목록</h1>
+<div th:if="${isEmpty}">
+    <p>책을 등록해주세요.</p>
+</div>
+
+<ul th:if="${!isEmpty}">
+    <li th:each="library : ${wishList}">
+        <div>
+            <img th:src="${library.book.cover}" alt="책 표지" style="width: 100px; height: 150px;"
+                 th:onclick="'openReadingModal(' + ${library.book.bookId} + ')'"> <!-- 수정된 onclick -->
+            <br>
+            <span th:text="${library.book.bookTitle}"></span> - <span th:text="${library.book.author}"></span>
+            <button th:onclick="'removeFromWishlist(' + ${library.book.bookId} + ')'">찜 해제</button>
+        </div>
+    </li>
+</ul>
+
+
+<!-- 책 등록 모달 -->
+<div id="searchModal">
+    <h2>책 등록하기</h2>
+    <input type="text" id="searchQuery" placeholder="책 제목 또는 저자 검색" onkeydown="checkEnter(event)">
+    <button onclick="searchBooks()">검색</button>
+    <button onclick="closeSearchModal()">닫기</button>
+    <div id="searchResults">
+        <!-- AJAX로 검색 결과를 이곳에 추가 -->
+    </div>
+</div>
+
+<!-- 책 읽기 모달 -->
+<div id="readingModal">
+    <div>
+        <h2>책 읽기 진행 상황</h2>
+        <form id="readingForm">
+            <input type="hidden" id="libraryId">
+            <p>책 제목: <span id="modalBookTitle"></span></p>
+            <p>현재 페이지: <input type="number" id="currentPage"></p>
+            <button type="button" onclick="saveReadingProgress()">저장</button>
+        </form>
+        <button onclick="closeModal()">닫기</button>
+    </div>
+</div>
+
+<!-- 책 등록 버튼 -->
+<button onclick="openSearchModal()">책 등록하기</button>
+<br>
+<a href="/library/my">내 서재</a>
+
+</body>
+</html>
