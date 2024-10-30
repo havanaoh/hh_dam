@@ -7,40 +7,41 @@ import java.util.List;
 
 @Entity
 @Table(name = "Post")
-public class Post {
+public class
+Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postId;
 
     @ManyToOne
-    @JoinColumn(name = "BoardId", nullable = false)
+    @JoinColumn(name = "boardId", nullable = false)
     private Board board;
 
-    @Column(name = "MemberId", nullable = false)
+    @Column(name = "memberId", nullable = false)
     private int memberId;
 
-    @Column(name = "BookId", nullable = false)
+    @Column(name = "bookId", nullable = false)
     private int bookId;
 
-    @Column(name = "PostTitle", nullable = false)
+    @Column(name = "postTitle", nullable = false)
     private String postTitle;
 
-    @Column(name = "PostContent", nullable = false)
+    @Column(name = "postContent", nullable = false)
     private String postContent;
 
-    @Column(name = "Views", nullable = false, columnDefinition = "int default 0")
+    @Column(name = "views", nullable = false, columnDefinition = "int default 0")
     private int views;
 
-    @Column(name = "CreatedDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
+    @Column(name = "createdDate", nullable = false, columnDefinition = "timestamp default current_timestamp")
     private Timestamp createdDate;
 
-    @Column(name = "ModifiedDate")
+    @Column(name = "modifiedDate")
     private Timestamp modifiedDate;
 
-    @Column(name = "Field")
+    @Column(name = "field")
     private int field;
 
-    @Column(name = "ImageId")
+    @Column(name = "imageId")
     private int imageId;
 
     @Column(name = "commentCount", nullable = false, columnDefinition = "int default 0")

@@ -22,4 +22,9 @@ public class Board {
     @OneToMany(mappedBy = "board")  // 수정됨
     private List<Post> posts;
 
+    public Board(int boardId, int groupId, String boardName) {
+        this.boardId = boardId;
+        this.groupId = groupId;
+        this.boardName = boardName;
+    }
 }
