@@ -1,5 +1,6 @@
 package com.hh.dam.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -17,14 +18,15 @@ public class BookDTO {
     private int priceStandard;
     private String cover;
 
-    private SubInfo subInfo; // SubInfo 객체 추가
+    // SubInfo 객체 추가
+    private SubInfo subInfo; // SubInfo 유지
 
-    // Getters and Setters
-
+    // SubInfo 내부 클래스
     @Data
     public static class SubInfo {
         private String subTitle;
         private String originalTitle;
-        private int itemPage; // 페이지 수 필드 추가
+        @JsonProperty("itemPage") // itemPage를 JSON 프로퍼티로 매핑
+        private int itemPage;
     }
 }

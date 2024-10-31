@@ -58,6 +58,7 @@
                                     data: { itemId: book.itemId },
                                     success: function(itemPage) {
                                         // 성공적으로 페이지 수를 가져오면 bookDiv에 추가
+                                        book.itemPage = itemPage; // 페이지 수 업데이트
                                         bookDiv.append("<span> 페이지 수: " + itemPage + "</span> ");
                                         bookDiv.append("<button onclick='addToWishlist(" + book.itemId + ", \"" + encodedQuery + "\")'>등록</button>");
                                         resultDiv.append(bookDiv);
@@ -80,7 +81,6 @@
                 }
             });
         }
-
         function addToWishlist(bookId, query) {
             $.ajax({
                 url: '/library/add-wishlist/' + bookId,

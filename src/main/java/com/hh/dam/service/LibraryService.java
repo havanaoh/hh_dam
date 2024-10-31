@@ -50,14 +50,13 @@ public class LibraryService {
 
     @Transactional
     public void addBookToDatabaseAndLibrary(BookDTO bookDTO, Member member) {
-        log.info("입력받은 BookDTO: {}", bookDTO);
+        log.info("BookDTO의 SubInfo: {}", bookDTO.getSubInfo());
         // 1. ISBN으로 책을 조회하여 DB에 이미 등록되어 있는지 확인
         Optional<Book> existingBook = bookRepository.findByIsbn(bookDTO.getIsbn());
         Book book;
         if (existingBook.isPresent()) {
             // 책이 이미 DB에 있을 경우
             book = existingBook.get();
-            log.info("책이 이미 DB에 존재합니다. 책 ID: {}", book.getBookId());
         } else {
             // 책이 DB에 없을 경우 새로운 Book 엔티티 생성 및 저장
             book = new Book();
@@ -68,7 +67,6 @@ public class LibraryService {
             book.setIsbn(bookDTO.getIsbn());
             book.setItemPage(bookDTO.getSubInfo().getItemPage()); // 여기가 중요
             book = bookRepository.save(book);  // DB에 저장
-            log.info("책이 DB에 저장되었습니다. 책 ID: {}", book.getBookId());
         }
 
         // 2. 해당 회원의 서재에 이미 책이 있는지 확인
