@@ -23,7 +23,7 @@ public class Book {
     private String publisher;
     private String cover;
     private String isbn;
-    private int totalPage;
+    private int itemPage;
     private Timestamp bookCreated;
     private Timestamp bookModified;
 

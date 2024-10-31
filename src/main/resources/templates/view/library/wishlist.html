@@ -41,16 +41,37 @@
                     if (result.length === 0) {
                         resultDiv.append("<p>검색 결과가 없습니다.</p>");
                     } else {
+                        var requests = []; // 페이지 수를 요청할 배열
+
                         result.forEach(function(book) {
-                            resultDiv.append(
-                                "<div>" +
-                                "<img src='" + book.cover + "' alt='" + book.title + "' style='width: 30px; height: auto;' /> - " + // 이미지 추가
+                            var bookDiv = $("<div>").append(
+                                "<img src='" + book.cover + "' alt='" + book.title + "' style='width: 30px; height: auto;' /> - " +
                                 "<span>" + book.title + "</span> - " +
-                                "<span>" + book.author + "</span> " +
-                                // 인자로 book.itemId와 encodedQuery를 함께 전달
-                                "<button onclick='addToWishlist(" + book.itemId + ", \"" + encodedQuery + "\")'>등록</button>" +
-                                "</div>"
+                                "<span>" + book.author + "</span> "
                             );
+
+                            // 페이지 수 조회를 위한 AJAX 호출을 배열에 추가
+                            requests.push(
+                                $.ajax({
+                                    url: '/book/api/library/pages',
+                                    type: 'GET',
+                                    data: { itemId: book.itemId },
+                                    success: function(itemPage) {
+                                        // 성공적으로 페이지 수를 가져오면 bookDiv에 추가
+                                        bookDiv.append("<span> 페이지 수: " + itemPage + "</span> ");
+                                        bookDiv.append("<button onclick='addToWishlist(" + book.itemId + ", \"" + encodedQuery + "\")'>등록</button>");
+                                        resultDiv.append(bookDiv);
+                                    },
+                                    error: function() {
+                                        console.log("페이지 수 조회에 실패했습니다.");
+                                    }
+                                })
+                            );
+                        });
+
+                        // 모든 요청이 완료되면 추가 작업 수행
+                        $.when.apply($, requests).then(function() {
+                            console.log("모든 페이지 수 요청 완료");
                         });
                     }
                 },
@@ -148,6 +169,8 @@
                     alert('저장 중 오류가 발생했습니다.');
                 }
             });
+
+
         }
 
         function closeModal() {

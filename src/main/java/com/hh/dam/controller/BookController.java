@@ -42,6 +42,12 @@ public class BookController {
         return bookService.searchBooks(query);
     }
 
+    @GetMapping("/api/library/pages")
+    @ResponseBody
+    public int bookPages(@RequestParam("itemId") int itemId) {
+        return bookService.bookPages(itemId);
+    }
+
     @GetMapping("/addBookForm")
     public String showAddBooksForm() {
         return "book/addBookForm";  // 입력 폼 페이지로 이동

@@ -50,10 +50,9 @@ public class LibraryService {
 
     @Transactional
     public void addBookToDatabaseAndLibrary(BookDTO bookDTO, Member member) {
-        log.info("입력받은 ISBN: {}", bookDTO.getIsbn());
+        log.info("입력받은 BookDTO: {}", bookDTO);
         // 1. ISBN으로 책을 조회하여 DB에 이미 등록되어 있는지 확인
         Optional<Book> existingBook = bookRepository.findByIsbn(bookDTO.getIsbn());
-        log.info("DB에서 ISBN {}으로 조회한 책: {}", bookDTO.getIsbn(), existingBook);
         Book book;
         if (existingBook.isPresent()) {
             // 책이 이미 DB에 있을 경우
@@ -67,7 +66,7 @@ public class LibraryService {
             book.setPublisher(bookDTO.getPublisher());
             book.setCover(bookDTO.getCover());
             book.setIsbn(bookDTO.getIsbn());
-            book.setTotalPage(bookDTO.getTotalPage());
+            book.setItemPage(bookDTO.getSubInfo().getItemPage()); // 여기가 중요
             book = bookRepository.save(book);  // DB에 저장
             log.info("책이 DB에 저장되었습니다. 책 ID: {}", book.getBookId());
         }
@@ -126,7 +125,7 @@ public class LibraryService {
         library.setCurrentPage(currentPage); // 읽은 페이지 수 업데이트
 
         // 독서율 계산
-        int totalPage = library.getBook().getTotalPage();
+        int totalPage = library.getBook().getItemPage();
         double readingProgress = ((double) currentPage / totalPage) * 100;
 
         // 책 상태를 '읽는 중'으로 변경

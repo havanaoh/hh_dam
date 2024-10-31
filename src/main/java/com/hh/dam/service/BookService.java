@@ -55,7 +55,26 @@ public class BookService {
         AladinApiResponse response = restTemplate.getForObject(url, AladinApiResponse.class);
 
         // 응답 결과를 BookDTO 리스트로 변환 후 반환
+        log.info("Aladin API 응답: {}", response);
         return response.getItem();  // 필요에 따라 변환 로직 추가
+    }
+
+    public int bookPages(int itemId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String ALADIN_API_URL = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx";
+        String url = ALADIN_API_URL + "?ttbkey=" + ttbKey + "&itemIdType=ItemId&ItemId=" + itemId +
+                "&output=js&Version=20131101&OptResult=itemPage";
+
+        // API 호출 및 결과 받아오기
+        AladinApiResponse response = restTemplate.getForObject(url, AladinApiResponse.class);
+
+        // 응답 결과에서 페이지 수 반환
+        if (response != null && response.getItem() != null && !response.getItem().isEmpty()) {
+            return response.getItem().get(0).getSubInfo().getItemPage(); // itemPage를 올바르게 접근
+        } else {
+            log.warn("응답 결과가 null이거나 빈 리스트입니다: {}", response);
+            return 0; // 아이템이 없을 경우 0 반환
+        }
     }
 
     public BookDTO findBookByItemId(String query, int itemId) {
