@@ -70,7 +70,7 @@
                             );
                         });
 
-                        // 모든 요청이 완료되면 추가 작업 수행
+                        // 모든 요청이 완료된 후, 등록 버튼 클릭 시 한 번만 등록 요청이 수행되도록 설정
                         $.when.apply($, requests).then(function() {
                             console.log("모든 페이지 수 요청 완료");
                         });
@@ -81,6 +81,7 @@
                 }
             });
         }
+
         function addToWishlist(bookId, query) {
             $.ajax({
                 url: '/library/add-wishlist/' + bookId,
@@ -191,10 +192,22 @@
 <div id="modalOverlay"></div>
 
 <h1>내 서재 - 찜 목록</h1>
+
 <div th:if="${isEmpty}">
     <p>책을 등록해주세요.</p>
 </div>
-
+<br>
+<!-- 책 등록 모달 -->
+<div id="searchModal">
+    <h2>책 등록하기</h2>
+    <input type="text" id="searchQuery" placeholder="책 제목 또는 저자 검색" onkeydown="checkEnter(event)">
+    <button onclick="searchBooks()">검색</button>
+    <button onclick="closeSearchModal()">닫기</button>
+    <div id="searchResults">
+        <!-- AJAX로 검색 결과를 이곳에 추가 -->
+    </div>
+</div>
+<br>
 <ul th:if="${!isEmpty}">
     <li th:each="library : ${wishList}">
         <div>
@@ -206,18 +219,6 @@
         </div>
     </li>
 </ul>
-
-
-<!-- 책 등록 모달 -->
-<div id="searchModal">
-    <h2>책 등록하기</h2>
-    <input type="text" id="searchQuery" placeholder="책 제목 또는 저자 검색" onkeydown="checkEnter(event)">
-    <button onclick="searchBooks()">검색</button>
-    <button onclick="closeSearchModal()">닫기</button>
-    <div id="searchResults">
-        <!-- AJAX로 검색 결과를 이곳에 추가 -->
-    </div>
-</div>
 
 <!-- 책 읽기 모달 -->
 <div id="readingModal">

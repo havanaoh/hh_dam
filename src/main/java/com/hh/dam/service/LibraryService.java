@@ -65,7 +65,9 @@ public class LibraryService {
             book.setPublisher(bookDTO.getPublisher());
             book.setCover(bookDTO.getCover());
             book.setIsbn(bookDTO.getIsbn());
-            book.setItemPage(bookDTO.getSubInfo().getItemPage()); // 여기가 중요
+
+            // 페이지 수와 다른 정보 추가
+            book.setItemPage(bookDTO.getSubInfo().getItemPage()); // 페이지 수 추가
             book = bookRepository.save(book);  // DB에 저장
         }
 
