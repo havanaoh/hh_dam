@@ -24,6 +24,11 @@ public class CustomMemberDetails implements UserDetails {
         return authorities;
     } // 사용자의 역할(Role)을 기반으로 권한을 설정
 
+
+    public Member getMember() {
+        return member;
+    }
+
     // user의 비밀번호 반환, 로그인 검증 시 사용
     @Override
     public String getPassword() {

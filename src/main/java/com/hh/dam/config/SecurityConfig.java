@@ -17,30 +17,30 @@ public class SecurityConfig {
 		http
 				.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(authorize -> authorize
-					// 인증 없이 접근 가능(로그인, 회원가입)
+						// 인증 없이 접근 가능(로그인, 회원가입)
 
-					.requestMatchers("/", "/home","/signin", "/signup").permitAll()
+						.requestMatchers("/", "/home","/signin", "/signup").permitAll()
 
-					// ADMIN 권한이 있어야 접근 가능
-					.requestMatchers("/admin").hasRole("ADMIN")
+						// ADMIN 권한이 있어야 접근 가능
+						.requestMatchers("/admin").hasRole("ADMIN")
 
-					// ADMIN 또는 USER 권한을 가진 사용자만 접근 가능
-                    .requestMatchers("/info", "/book/**", "/library/**", "/board/**").hasAnyRole("ADMIN", "USER")
+						// ADMIN 또는 USER 권한을 가진 사용자만 접근 가능
+						.requestMatchers("/info", "/book/**", "/library/**", "/board/**").hasAnyRole("ADMIN", "USER")
 
-					// 그 외 모든 요청은 인증된 사용자만 접근 가능
-                    .anyRequest().authenticated()
-            )
+						// 그 외 모든 요청은 인증된 사용자만 접근 가능
+						.anyRequest().authenticated()
+				)
 				// 로그아웃 설정
-        		.logout((auth) -> auth
-				// 로그아웃 요청 URL 설정
-                .logoutUrl("/signout")
+				.logout((auth) -> auth
+						// 로그아웃 요청 URL 설정
+						.logoutUrl("/signout")
 
-				// 로그아웃 성공 시 이동할 페이지 설정
-				.logoutSuccessUrl("/signin")
+						// 로그아웃 성공 시 이동할 페이지 설정
+						.logoutSuccessUrl("/signin")
 
-				// 로그아웃 요청은 인증 없이도 가능
-				.permitAll()
-        )
+						// 로그아웃 요청은 인증 없이도 가능
+						.permitAll()
+				)
 				.formLogin((auth) -> auth
 						.loginPage("/signin")  // 사용자 정의 로그인 페이지
 						.loginProcessingUrl("/security-signin/loginProc")  // 로그인 처리 URL
@@ -60,9 +60,9 @@ public class SecurityConfig {
 
 	// 사용자의 비밀번호 암호화하고 비교하는데 사용
 	@Bean
-    public PasswordEncoder passwordEncoder(){
+	public PasswordEncoder passwordEncoder(){
 
-        return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
 
 }

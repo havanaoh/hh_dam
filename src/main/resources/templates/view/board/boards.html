@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>게시판 목록</title>
+</head>
+<body>
+<h1>게시판 목록</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>게시판 ID</th>
+        <th>그룹 ID</th>
+        <th>게시판 이름</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="board : ${boards}">
+        <td th:text="${board.boardId}"></td>
+        <td th:text="${board.groupId}"></td>
+        <td th:text="${board.boardName}"></td>
+        <td><a th:href="@{/boards/edit/{boardId}(boardId=${board.boardId})}">수정</a></td>
+        <td><a th:href="@{/boards/delete/{boardId}(boardId=${board.boardId})}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a></td>
+    </tr>
+    </tbody>
+</table>
+<a href="/boards/create">새 게시판 추가</a>
+</body>
+</html>
